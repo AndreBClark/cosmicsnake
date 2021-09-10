@@ -29,8 +29,15 @@ function move(gameState) {
     // Step 0: Don't let your Battlesnake move back on it's own neck
     const myHead = gameState.you.head
     const myNeck = gameState.you.body[1]
-    const boardWidth = gameState.board.width
-    const boardHeight = gameState.board.height
+    const board = {
+        width: gameState.board.width,
+        height: gameState.board.height
+    }
+    const moveAxis = {
+        x: [possibleMoves.left, possibleMoves.right],
+        y: [possibleMoves.up, possibleMoves.down]
+    }
+
     function AvoidNeck () {
         if (myNeck.x < myHead.x) {
             possibleMoves.left = false
@@ -43,21 +50,24 @@ function move(gameState) {
         }
     }
 
-    function AvoidEdges (x,y) {
-        switch (myHead.x) {
-            case 0: () => possibleMoves.left = false;
-            case boardWidth: () => possibleMoves.right = false;
-            default: () => null;
-        }
-        switch (myHead.y) {
-            case 0: () => possibleMoves.up = false;
-            case boardHeight: () => possibleMoves.down = false;
-            default: () => null;
+
+    function BoundaryCheck(head, boundary, axis) {
+        switch (head) {
+            case 0: axis[0] = false;
+                break;
+            case boundary: axis[1] = false;
+                break;
+            default: break;
         }
     }
 
+    function AvoidEdges (head, boundary, axis) {
+        BoundaryCheck(head.x, boundary.x, axis.x);
+        BoundaryCheck(head.y, boundary.y, axis.y);
+    }
+
     AvoidNeck();
-    AvoidEdges(boardWidth, boardHeight);
+    AvoidEdges(myHead, board, moveAxis);
 
     // TODO: Step 1 - Don't hit walls.
     // Use information in gameState to prevent your Battlesnake from moving beyond the boundaries of the board.
