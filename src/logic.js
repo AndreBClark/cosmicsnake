@@ -25,7 +25,6 @@ function move(gameState) {
         left: true,
         right: true
     }
-    console.log(possibleMoves);
     // Step 0: Don't let your Battlesnake move back on it's own neck
     const myHead = gameState.you.head
     const myNeck = gameState.you.body[1]
@@ -59,6 +58,7 @@ function move(gameState) {
                 break;
             default: break;
         }
+        console.log(possibleMoves);
     }
 
     function AvoidEdges (head, boundary, axis) {
