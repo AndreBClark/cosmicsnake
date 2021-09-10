@@ -58,12 +58,12 @@ function move(gameState) {
                 break;
             default: break;
         }
-        console.log(possibleMoves);
     }
 
     function AvoidEdges (head, boundary, axis) {
         BoundaryCheck(head.x, boundary.x, axis.x);
         BoundaryCheck(head.y, boundary.y, axis.y);
+        console.log(possibleMoves);
     }
 
     AvoidNeck();
