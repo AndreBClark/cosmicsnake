@@ -2,10 +2,10 @@ function info() {
     console.log("INFO")
     const response = {
         apiversion: "1",
-        author: "",
-        color: "#888888",
-        head: "default",
-        tail: "default"
+        author: "CosmicDivision",
+        color: "#47ebb4", 
+        head: "caffeine",
+        tail: "bolt"
     }
     return response
 }
@@ -34,23 +34,30 @@ function move(gameState) {
     const padding = 1
     const paddedBoardHeight = boardHeight - padding;
     const paddedBoardWidth = boardWidth - padding;
-    if (myNeck.x < myHead.x) {
-        possibleMoves.left = false
-    } else if (myNeck.x > myHead.x) {
-        possibleMoves.right = false
-    } else if (myNeck.y < myHead.y) {
-        possibleMoves.down = false
-    } else if (myNeck.y > myHead.y) {
-        possibleMoves.up = false
-    } else if (myHead.x >= paddedBoardWidth) {
-        possibleMoves.right = false
-    } else if (myHead.x <= padding) {
-        possibleMoves.left = false
-    } else if (myHead.y >= paddedBoardHeight) {
-        possibleMoves.down = false
-    } else if (myHead.y <= padding) {
-        possibleMoves.up = false
+    function AvoidNeck () {
+        if (myNeck.x < myHead.x) {
+            possibleMoves.left = false
+        } else if (myNeck.x > myHead.x) {
+            possibleMoves.right = false
+        } else if (myNeck.y < myHead.y) {
+            possibleMoves.down = false
+        } else if (myNeck.y > myHead.y) {
+            possibleMoves.up = false
+        }
     }
+    function AvoidEdges() {
+        if (myHead.x >= paddedBoardWidth) {
+            possibleMoves.right = false
+        } else if (myHead.x <= padding) {
+            possibleMoves.left = false
+        } else if (myHead.y >= paddedBoardHeight) {
+            possibleMoves.down = false
+        } else if (myHead.y <= padding) {
+            possibleMoves.up = false
+        }
+    }
+    AvoidNeck();
+    AvoidEdges();
     // TODO: Step 1 - Don't hit walls.
     // Use information in gameState to prevent your Battlesnake from moving beyond the boundaries of the board.
 
