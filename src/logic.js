@@ -31,9 +31,6 @@ function move(gameState) {
     const myNeck = gameState.you.body[1]
     const boardWidth = gameState.board.width
     const boardHeight = gameState.board.height
-    const padding = 1
-    const paddedBoardHeight = boardHeight - padding;
-    const paddedBoardWidth = boardWidth - padding;
     function AvoidNeck () {
         if (myNeck.x < myHead.x) {
             possibleMoves.left = false
@@ -45,19 +42,23 @@ function move(gameState) {
             possibleMoves.up = false
         }
     }
-    function AvoidEdges() {
-        if (myHead.x >= paddedBoardWidth) {
-            possibleMoves.right = false
-        } else if (myHead.x <= padding) {
-            possibleMoves.left = false
-        } else if (myHead.y >= paddedBoardHeight) {
-            possibleMoves.down = false
-        } else if (myHead.y <= padding) {
-            possibleMoves.up = false
+
+    function AvoidEdges (x,y) {
+        switch (myHead.x) {
+            case 0: () => possibleMoves.left = false;
+            case boardWidth: () => possibleMoves.right = false;
+            default: () => null;
+        }
+        switch (myHead.y) {
+            case 0: () => possibleMoves.up = false;
+            case boardHeight: () => possibleMoves.down = false;
+            default: () => null;
         }
     }
+
     AvoidNeck();
-    AvoidEdges();
+    AvoidEdges(boardWidth, boardHeight);
+
     // TODO: Step 1 - Don't hit walls.
     // Use information in gameState to prevent your Battlesnake from moving beyond the boundaries of the board.
 
