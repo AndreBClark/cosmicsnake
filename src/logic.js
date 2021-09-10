@@ -29,8 +29,8 @@ function move(gameState) {
     const myHead = gameState.you.head
     const myNeck = gameState.you.body[1]
     const board = {
-        width: gameState.board.width,
-        height: gameState.board.height
+        x: gameState.board.width,
+        y: gameState.board.height
     }
     const moveAxis = {
         x: [possibleMoves.left, possibleMoves.right],
@@ -60,7 +60,7 @@ function move(gameState) {
         }
     }
 
-    function AvoidEdges (head, boundary, axis) {
+    function AvoidEdges(head, boundary, axis) {
         BoundaryCheck(head.x, boundary.x, axis.x);
         BoundaryCheck(head.y, boundary.y, axis.y);
         console.log(possibleMoves);
