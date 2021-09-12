@@ -115,6 +115,19 @@ function move(gameState) {
           possibleMoves.down = false
         }
       })
+      // avoid head to head collisions
+      if (myHead.x === snake.head.x - 1 && myHead.y === snake.head.y) {
+        possibleMoves.right = false
+      }
+      if (myHead.x === snake.head.x + 1 && myHead.y === snake.head.y) {
+        possibleMoves.left = false
+      }
+      if (myHead.y === snake.head.y - 1 && myHead.x === snake.head.x) {
+        possibleMoves.up = false
+      }
+      if (myHead.y === snake.head.y + 1 && myHead.x === snake.head.x) {
+        possibleMoves.down = false
+      }
     })
   }
 
