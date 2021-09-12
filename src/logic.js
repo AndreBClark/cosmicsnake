@@ -126,17 +126,21 @@ function move(gameState) {
     const food = gameState.board.food;
     if (gameState.you.health > 25) {
       food.forEach(morsel => {
-        if (myHead.x === morsel.x -1 && myHead.y === morsel.y) {
-          possibleMoves.right = false
-        }
-        if (myHead.x === morsel.x + 1 && myHead.y === morsel.y) {
-          possibleMoves.left = false
-        }
-        if (myHead.y === morsel.y -1 && myHead.x === morsel.x) {
-          possibleMoves.up = false
-        }
-        if (myHead.y === morsel.y +1 && myHead.x === morsel.x) {
-          possibleMoves.down = false
+        if (myHead.x == 0 || myHead.y === 0 || myHead.x === board.x || myHead.y === board.y) {
+          return;
+        } else {
+          if (myHead.x === morsel.x - 1 && myHead.y === morsel.y) {
+            possibleMoves.right = false
+          }
+          if (myHead.x === morsel.x + 1 && myHead.y === morsel.y) {
+            possibleMoves.left = false
+          }
+          if (myHead.y === morsel.y - 1 && myHead.x === morsel.x) {
+            possibleMoves.up = false
+          }
+          if (myHead.y === morsel.y + 1 && myHead.x === morsel.x) {
+            possibleMoves.down = false
+          }
         }
       })
     }
