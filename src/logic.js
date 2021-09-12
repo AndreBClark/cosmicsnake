@@ -19,25 +19,29 @@ function end(gameState) {
 }
 
 function move(gameState) {
-    let possibleMoves = {
-        up: true,
-        down: true,
-        left: true,
-        right: true
-    }
-    // Step 0: Don't let your Battlesnake move back on it's own neck
-    const myHead = gameState.you.head
-    const myNeck = gameState.you.body[1]
-    const board = {
-        x: gameState.board.width - 1,
-        y: gameState.board.height - 1
-    }
-    const moveAxis = {
-        x: [possibleMoves.left, possibleMoves.right],
-        y: [possibleMoves.up, possibleMoves.down]
-    }
+  let possibleMoves = {
+      up: true,
+      down: true,
+      left: true,
+      right: true
+  }
+  // Step 0: Don't let your Battlesnake move back on it's own neck
+  const myHead = gameState.you.head
+  const myNeck = gameState.you.body[1]
+  const board = {
+      x: gameState.board.width - 1,
+      y: gameState.board.height - 1
+  }
+  function offBoard(state, coord) {
+      if (coord.x < 0) return true;
+      if (coord.y < 0) return true;
+      if (coord.y >= state.board.height) return true;
+      if (coord.x >= state.board.height) return true;
+      return false; // If it makes it here we are ok.
+  }
+  offBoard(myHead,)
 
-    function AvoidNeck () {
+    function avoidNeck() {
       if (myNeck.x < myHead.x) {
           possibleMoves.left = false
       } else if (myNeck.x > myHead.x) {
@@ -49,16 +53,13 @@ function move(gameState) {
       }
     }
 
-    AvoidNeck();
 
     // TODO: Step 1 - Don't hit walls.
     // Use information in gameState to prevent your Battlesnake from moving beyond the boundaries of the board.
+    // If you hit a wall, set the appropriate direction to false.
+  
+  
 
-    const boundaries = [
-      0,
-      board.x,
-      board.y, 
-    ];
 
     function boundaryCheck() {
       if (myHead.x === 0) {
@@ -75,14 +76,12 @@ function move(gameState) {
       }
     }
 
-    boundaryCheck()
-
 
 
     // TODO: Step 2 - Don't hit yourself.
     // Use information in gameState to prevent your Battlesnake from colliding with itself.
+  function avoidSelf() {
     const myBody = gameState.you.body
-
     myBody.forEach(segment => {
         if (myHead.x === segment.x -1 && myHead.y === segment.y) {
           possibleMoves.right = false
@@ -98,6 +97,8 @@ function move(gameState) {
         }
       }
     )
+  }
+  function avoidFood() {
     const food = gameState.board.food;
     if (gameState.you.health > 25) {
       food.forEach(morsel => {
@@ -114,62 +115,21 @@ function move(gameState) {
           possibleMoves.down = false
         }
       })
-    } else {
-      food.forEach((f) => {
-        if (myHead.x === f.x - 1 && myHead.y === f.y) {
-          possibleMoves.right = true;
-          possibleMoves.left = false;
-          possibleMoves.up = false;
-          possibleMoves.down = false;
-        }
-        if (myHead.x === f.x + 1 && myHead.y === f.y) {
-          possibleMoves.right = false;
-          possibleMoves.left = true;
-          possibleMoves.up = false;
-          possibleMoves.down = false;
-        }
-        if (myHead.y === f.y - 1 && myHead.x === f.x) {
-          possibleMoves.right = false;
-          possibleMoves.left = false;
-          possibleMoves.up = true;
-          possibleMoves.down = false;
-        }
-        if (myHead.y === f.y + 1 && myHead.x === f.x) {
-          possibleMoves.right = false;
-          possibleMoves.left = false;
-          possibleMoves.up = false;
-          possibleMoves.down = true;
-        }
-      })
     }
+  }
 
     // TODO: Step 3 - Don't collide with others.
     // Use information in gameState to prevent your Battlesnake from colliding with others.
-    const snakes = gameState.board.snakes;
-  snakes.forEach((snake) => {
-    const snakeBody = snake.body;
-
-    snakeBody.forEach((b) => {
-      if (myHead.x === b.x - 1 && myHead.y === b.y) {
-        possibleMoves.right = false;
-      }
-      if (myHead.x === b.x + 1 && myHead.y === b.y) {
-        possibleMoves.left = false;
-      }
-      if (myHead.y === b.y - 1 && myHead.x === b.x) {
-        possibleMoves.up = false;
-      }
-      if (myHead.y === b.y + 1 && myHead.x === b.x) {
-        possibleMoves.down = false;
-      }
-    });
-  });
-
+  
     // TODO: Step 4 - Find food.
     // Use information in gameState to seek out and find food.
 
     // Finally, choose a move from the available safe moves.
     // TODO: Step 5 - Select a move to make based on strategy, rather than random.
+    avoidNeck();
+    boundaryCheck();
+    avoidSelf();
+    avoidFood();
     console.table(possibleMoves);
     const safeMoves = Object.keys(possibleMoves).filter(key => possibleMoves[key])
     const response = {
