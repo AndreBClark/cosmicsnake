@@ -98,6 +98,26 @@ function move(gameState) {
       }
     )
   }
+  function avoidOtherSnakes() {
+    const snakes = gameState.board.snakes
+    snakes.forEach(snake => {
+      snake.body.forEach(segment => {
+        if (myHead.x === segment.x -1 && myHead.y === segment.y) {
+          possibleMoves.right = false
+        }
+        if (myHead.x === segment.x + 1 && myHead.y === segment.y) {
+          possibleMoves.left = false
+        }
+        if (myHead.y === segment.y -1 && myHead.x === segment.x) {
+          possibleMoves.up = false
+        }
+        if (myHead.y === segment.y +1 && myHead.x === segment.x) {
+          possibleMoves.down = false
+        }
+      })
+    })
+  }
+
   function avoidFood() {
     const food = gameState.board.food;
     if (gameState.you.health > 25) {
@@ -126,10 +146,11 @@ function move(gameState) {
 
     // Finally, choose a move from the available safe moves.
     // TODO: Step 5 - Select a move to make based on strategy, rather than random.
-    avoidNeck();
-    boundaryCheck();
-    avoidSelf();
-    avoidFood();
+  avoidNeck();
+  boundaryCheck();
+  avoidSelf();
+  avoidOtherSnakes();
+  avoidFood();
     console.table(possibleMoves);
     const safeMoves = Object.keys(possibleMoves).filter(key => possibleMoves[key])
     const response = {
