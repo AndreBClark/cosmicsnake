@@ -32,15 +32,6 @@ function move(gameState) {
       x: gameState.board.width - 1,
       y: gameState.board.height - 1
   }
-  function offBoard(state, coord) {
-      if (coord.x < 0) return true;
-      if (coord.y < 0) return true;
-      if (coord.y >= state.board.height) return true;
-      if (coord.x >= state.board.height) return true;
-      return false; // If it makes it here we are ok.
-  }
-  offBoard(myHead,)
-
     function avoidNeck() {
       if (myNeck.x < myHead.x) {
           possibleMoves.left = false
