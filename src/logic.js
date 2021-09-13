@@ -25,6 +25,8 @@ function move(gameState) {
     left: true,
     right: true
   }
+
+  const random = max => Math.floor(Math.random() * max);
   // Step 0: Don't let your Battlesnake move back on it's own neck
   const myHead = gameState.you.head
   const myNeck = gameState.you.body[1]
@@ -32,6 +34,17 @@ function move(gameState) {
     x: gameState.board.width - 1,
     y: gameState.board.height - 1
   }
+  
+  const edges = {
+    up: myHead.y === board.y,
+    down: myHead.y === 0,
+    left: myHead.x === 0,
+    right: myHead.x === board.x,
+  }
+
+  const isColliding = Object.values(edges).includes(true)
+  const isHungry = gameState.you.health < 50;
+
   function avoidNeck() {
     if (myNeck.x < myHead.x) {
       possibleMoves.left = false
@@ -51,21 +64,25 @@ function move(gameState) {
 
 
 
-
-  function boundaryCheck() {
-    if (myHead.x === 0) {
-      possibleMoves.left = false
-    }
-    if (myHead.y === 0) {
-      possibleMoves.down = false
-    }
-    if (myHead.x === board.x) {
-      possibleMoves.right = false
-    }
-    if (myHead.y === board.y) {
-      possibleMoves.up = false
+  function boundaryCheck () {
+    let moves = Object.values(possibleMoves);
+    Object.values(edges).forEach((edge, index) => {
+      if (edge) moves[index] = false;
+    })
+    possibleMoves = {
+      up: moves[0],
+      down: moves[1],
+      left: moves[2],
+      right: moves[3]
     }
   }
+    // if (edges.up) possibleMoves.up = false
+
+    // if (edges.down) possibleMoves.down = false
+
+    // if (edges.left) possibleMoves.left = false
+
+    // if (edges.right) possibleMoves.right = false
 
 
 
@@ -122,13 +139,11 @@ function move(gameState) {
     })
   }
 
+
   function avoidFood() {
     const food = gameState.board.food;
-    if (gameState.you.health > 50) {
-      if (myHead.x === 0) return;
-      if (myHead.y === 0) return;
-      if (myHead.x === board.x) return;
-      if (myHead.y === board.y) return;
+    if (isHungry) {
+      if (isColliding) return;
       food.forEach(morsel => {
         if (myHead.x === morsel.x - 1 && myHead.y === morsel.y) {
           possibleMoves.right = false
@@ -146,15 +161,16 @@ function move(gameState) {
     }
   }
 
+
   avoidNeck();
+  boundaryCheck();
   avoidSelf();
   avoidFood();
   avoidOtherSnakes();
-  boundaryCheck();
   console.table(possibleMoves);
-  const safeMoves = Object.keys(possibleMoves).filter(key => possibleMoves[key])
+    const safeMoves = Object.keys(possibleMoves).filter(key => possibleMoves[key]);
   const response = {
-    move: safeMoves[Math.floor(Math.random() * safeMoves.length)],
+    move: safeMoves[random(safeMoves.length)],
   }
 
   console.log(`${gameState.game.id} MOVE ${gameState.turn}: ${response.move}`)
